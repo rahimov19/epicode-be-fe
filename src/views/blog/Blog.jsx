@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Button, Container, Image } from "react-bootstrap";
@@ -14,7 +15,8 @@ const Blog = (props) => {
     };
 
     try {
-      const endpoint = `http://localhost:3001/blogs/${params.id}`;
+      const apiUrl = process.env.REACT_APP_BE_URL;
+      const endpoint = `${apiUrl}/blogs/${params.id}`;
       const response = await fetch(endpoint, options);
     } catch (error) {
       console.log(error);

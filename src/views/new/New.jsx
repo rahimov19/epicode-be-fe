@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { convertToHTML } from "draft-convert";
 import { EditorState } from "draft-js";
 import React, { useEffect, useState } from "react";
@@ -6,6 +8,8 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./styles.css";
 const NewBlogPost = (props) => {
+  const apiUrl = process.env.REACT_APP_BE_URL;
+
   const submitHandle = async (e) => {
     e.preventDefault();
     const title = document.querySelector("#blog-form").value;
@@ -36,7 +40,7 @@ const NewBlogPost = (props) => {
     };
 
     try {
-      const endpoint = "http://localhost:3001/blogs/";
+      const endpoint = `${apiUrl}/blogs/`;
       const response = await fetch(endpoint, options);
 
       alert("Post edited successfully");
@@ -47,7 +51,7 @@ const NewBlogPost = (props) => {
   const [cats, setCats] = useState();
   let getPosts = async () => {
     try {
-      const response = await fetch("http://localhost:3001/blogs");
+      const response = await fetch(`${apiUrl}/blogs`);
       if (response.ok) {
         const data = await response.json();
         setCats(data);
