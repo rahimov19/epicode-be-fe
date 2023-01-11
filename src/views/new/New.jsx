@@ -9,9 +9,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./styles.css";
 const NewBlogPost = (props) => {
   const apiUrl = process.env.REACT_APP_BE_URL;
+  const [image, setImage] = useState(null);
+  const [userId, setUserId] = useState("");
 
   const submitHandle = async (e) => {
     e.preventDefault();
+
     const title = document.querySelector("#blog-form").value;
     const author = document.querySelector("#blog-Author").value;
     const readtime = document.querySelector("#blog-ReadTime").value;
@@ -24,13 +27,29 @@ const NewBlogPost = (props) => {
         value: readtime,
         unit: "minute",
       },
-      author: {
-        name: author,
-        avatar: `https://ui-avatars.com/api/?name=${author}`,
-      },
       content: html,
     };
+    const submitAuthor = {
+      author: {
+        name: author,
+      },
+    };
     console.log(submitObject);
+    const options3 = {
+      method: "POST",
+      body: JSON.stringify(submitAuthor),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const endpoint = `${apiUrl}/authors/`;
+      const response = await fetch(endpoint, options3);
+      setUserId(response);
+    } catch (error) {
+      console.log(error);
+    }
+
     const options = {
       method: "POST",
       body: JSON.stringify(submitObject),
@@ -42,12 +61,28 @@ const NewBlogPost = (props) => {
     try {
       const endpoint = `${apiUrl}/blogs/`;
       const response = await fetch(endpoint, options);
-
       alert("Post edited successfully");
     } catch (error) {
       console.log(error);
     }
+
+    const formData = new FormData();
+
+    formData.append("avatar", image);
+
+    const options2 = {
+      method: "POST",
+      body: formData,
+    };
+
+    try {
+      const endpoint = `${apiUrl}/${userId}`;
+      const response = await fetch(endpoint, options2);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   const [cats, setCats] = useState();
   let getPosts = async () => {
     try {
@@ -83,6 +118,16 @@ const NewBlogPost = (props) => {
         <Form.Group controlId="blog-Author" className="mt-3">
           <Form.Label>Author</Form.Label>
           <Form.Control size="lg" placeholder="Author" />
+        </Form.Group>
+        <Form.Group className="mt-4 d-flex flex-column">
+          <Form.Label>Author Avatar</Form.Label>
+          <input
+            type="file"
+            id="avatar"
+            onChange={(e) => setImage(e.target.files[0])}
+          >
+            {/* <Form.File id="exampleFormControlFile1" label="Example file input" /> */}
+          </input>
         </Form.Group>
         <Form.Group controlId="blog-ReadTime" className="mt-3">
           <Form.Label>Read Time</Form.Label>
