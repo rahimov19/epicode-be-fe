@@ -10,7 +10,10 @@ import "./styles.css";
 const NewBlogPost = (props) => {
   const apiUrl = process.env.REACT_APP_BE_URL;
   const [image, setImage] = useState(null);
+  const [imageBlog, setImageBlog] = useState(null);
   const [userId, setUserId] = useState("");
+  // const [idd, setIdd] = useState("");
+  let idd = "";
 
   const submitHandle = async (e) => {
     e.preventDefault();
@@ -28,27 +31,10 @@ const NewBlogPost = (props) => {
         unit: "minute",
       },
       content: html,
-    };
-    const submitAuthor = {
       author: {
         name: author,
       },
     };
-    console.log(submitObject);
-    const options3 = {
-      method: "POST",
-      body: JSON.stringify(submitAuthor),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    try {
-      const endpoint = `${apiUrl}/authors/`;
-      const response = await fetch(endpoint, options3);
-      setUserId(response);
-    } catch (error) {
-      console.log(error);
-    }
 
     const options = {
       method: "POST",
@@ -61,6 +47,11 @@ const NewBlogPost = (props) => {
     try {
       const endpoint = `${apiUrl}/blogs/`;
       const response = await fetch(endpoint, options);
+      // let postId = await response.json();
+      idd = await response.json();
+      // console.log(postId);
+      console.log(idd);
+
       alert("Post edited successfully");
     } catch (error) {
       console.log(error);
@@ -76,8 +67,25 @@ const NewBlogPost = (props) => {
     };
 
     try {
-      const endpoint = `${apiUrl}/${userId}`;
+      const endpoint = `${apiUrl}/files/${idd.id}/user`;
+      console.log(endpoint);
       const response = await fetch(endpoint, options2);
+    } catch (error) {
+      console.log(error);
+    }
+
+    const formData2 = new FormData();
+
+    formData2.append("blog", imageBlog);
+
+    const options3 = {
+      method: "POST",
+      body: formData2,
+    };
+
+    try {
+      const endpoint = `${apiUrl}/files/${idd.id}/blog`;
+      const response = await fetch(endpoint, options3);
     } catch (error) {
       console.log(error);
     }
@@ -125,9 +133,15 @@ const NewBlogPost = (props) => {
             type="file"
             id="avatar"
             onChange={(e) => setImage(e.target.files[0])}
-          >
-            {/* <Form.File id="exampleFormControlFile1" label="Example file input" /> */}
-          </input>
+          ></input>
+        </Form.Group>
+        <Form.Group className="mt-4 d-flex flex-column">
+          <Form.Label>Post Cover</Form.Label>
+          <input
+            type="file"
+            id="blog"
+            onChange={(e) => setImageBlog(e.target.files[0])}
+          ></input>
         </Form.Group>
         <Form.Group controlId="blog-ReadTime" className="mt-3">
           <Form.Label>Read Time</Form.Label>

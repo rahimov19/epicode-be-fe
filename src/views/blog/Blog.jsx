@@ -8,6 +8,7 @@ import BlogLike from "../../components/likes/BlogLike";
 
 import "./styles.css";
 const Blog = (props) => {
+  const apiUrl = process.env.REACT_APP_BE_URL;
   let deletePost = async () => {
     console.log(params.id);
     const options = {
@@ -15,7 +16,6 @@ const Blog = (props) => {
     };
 
     try {
-      const apiUrl = process.env.REACT_APP_BE_URL;
       const endpoint = `${apiUrl}/blogs/${params.id}`;
       const response = await fetch(endpoint, options);
     } catch (error) {
@@ -25,7 +25,7 @@ const Blog = (props) => {
   };
   let getPost = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/blogs/${params.id}`);
+      const response = await fetch(`${apiUrl}/blogs/${params.id}`);
       if (response.ok) {
         const data = await response.json();
         setBlog(data);
@@ -83,9 +83,16 @@ const Blog = (props) => {
                 }}
               >
                 <BlogLike defaultLikes={["123"]} onChange={console.log} />
+              </div>
+              <div className="d-flex flex-column" id="123">
                 <Button variant="danger" className="mt-3" onClick={deletePost}>
                   DELETE
                 </Button>
+                <a href={apiUrl + "/files/" + params.id + "/pdf"}>
+                  <Button variant="success" className="mt-3">
+                    Download PDF
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
