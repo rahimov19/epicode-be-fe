@@ -12,6 +12,7 @@ const NewBlogPost = (props) => {
   const [image, setImage] = useState(null);
   const [imageBlog, setImageBlog] = useState(null);
   const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   // const [idd, setIdd] = useState("");
   let idd = "";
 
@@ -89,6 +90,19 @@ const NewBlogPost = (props) => {
     } catch (error) {
       console.log(error);
     }
+
+    try {
+      const endpoint = `${apiUrl}/blogs/email`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const [cats, setCats] = useState();
@@ -126,6 +140,17 @@ const NewBlogPost = (props) => {
         <Form.Group controlId="blog-Author" className="mt-3">
           <Form.Label>Author</Form.Label>
           <Form.Control size="lg" placeholder="Author" />
+        </Form.Group>
+        <Form.Group controlId="blog-email" className="mt-3">
+          <Form.Label>Email Adress</Form.Label>
+          <Form.Control
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            size="lg"
+            placeholder="Email"
+          />
         </Form.Group>
         <Form.Group className="mt-4 d-flex flex-column">
           <Form.Label>Author Avatar</Form.Label>
