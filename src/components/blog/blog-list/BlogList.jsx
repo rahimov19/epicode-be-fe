@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import BlogItem from "../blog-item/BlogItem";
+import axios from "axios";
 
 const BlogList = (props) => {
   const apiUrl = process.env.REACT_APP_BE_URL;
@@ -10,11 +11,15 @@ const BlogList = (props) => {
   }, []);
   let getPosts = async () => {
     try {
-      const response = await fetch(`${apiUrl}/blogs`);
+      const response = await fetch(`${apiUrl}/blogs`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        setPosts(data);
+        setPosts(data.blogs);
       } else {
         throw new Error("AAAAAAAA");
       }
